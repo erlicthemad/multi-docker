@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t naujocke/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true naujocke/react-test npm test
+
+after_success:
+  -docker build -t naujocke/multi-client ./client
+  -docker build -t naujocke/multi-nginx ./nginx
+  -docker build -t naujocke/multi-server ./server
+  -docker build -t naujocke/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login  -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push naujocke/multi-client
+  - docker push naujocke/multi-nginx
+  - docker push naujocke/multi-server
+  - docker push naujocke/multi-worker
