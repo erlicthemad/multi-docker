@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import NumberFormat from 'react-number-format';
+
 
 class Fib extends Component {
   state = {
@@ -44,7 +46,7 @@ class Fib extends Component {
     for (let key in this.state.values) {
       entries.push(
         <div key={key}>
-          For index {key} I calculated {this.state.values[key].toLocaleString()}
+          For index {key} I calculated <NumberFormat value={this.state.values[key]} displayType={'text'} thousandSeparator={true} prefix={''} />
         </div>
       );
     };
